@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plamo Translate — オプション</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial; margin: 24px; max-width: 760px; }
+    .card { border: 1px solid #eee; border-radius: 12px; padding: 16px; margin-top: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+    .row { display: flex; gap: 12px; align-items: center; }
+    button { padding: 10px 14px; border-radius: 10px; border: 0; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+    .muted { color: #666; font-size: 13px; }
+    h1 { margin-top: 0; }
+    label { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  </style>
+  </head>
+  <body>
+    <h1>Plamo Translate — オプション</h1>
+
+    <div class="card">
+      <h3>挙動</h3>
+      <label><input type="checkbox" id="autoSubmit" /> テキスト投入後に自動で送信ボタンを押す</label>
+      <div class="muted" style="margin-top:6px;">無効にすると入力のみ行います。</div>
+    </div>
+
+    <div class="row" style="margin-top: 16px;">
+      <button id="save">保存</button>
+      <div id="status" class="muted" aria-live="polite"></div>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+  </html>
+

@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "Plamo Translate Sender",
+  "version": "1.0.0",
+  "description": "拡張ボタンから入力したテキストをPlamoデモに投入して送信ボタンを押します。",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "omnibox": {
+    "keyword": "pl"
+  },
+  "action": {
+    "default_title": "Plamoに送信",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "scripting",
+    "storage",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://translate-demo.plamo.preferredai.jp/*"
+  ],
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://translate-demo.plamo.preferredai.jp/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "exclude_matches": [
+        "https://translate-demo.plamo.preferredai.jp/*"
+      ],
+      "js": [
+        "doublecopy.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ]
+}
