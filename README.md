@@ -47,6 +47,8 @@ Chrome Web Store 版の説明文は `docs/store-ja.md` を参照（後述）。
   - `popup.html` / `popup.js` / `options.html` / `options.js`
   - `README.md`（実装メモ）
 - `docs/` … ストア掲載用文面
+  - `store-ja.md`（Chrome ウェブストア掲載文・日本語）
+  - `privacy-policy-ja.md`（プライバシーポリシー・日本語）
 
 ## パッケージング
 
@@ -62,4 +64,3 @@ zip -X -r ../plamo_translate_extension_v2-<version>.zip . -x "**/.DS_Store" "**/
 ## ライセンス
 
 必要に応じてライセンスを追加してください（例: MIT）。
-
