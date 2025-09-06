@@ -60,7 +60,3 @@ zip -X -r ../plamo_translate_extension_v2-<version>.zip . -x "**/.DS_Store" "**/
 ## 変更履歴
 
 - 1.0.0: ポップアップ送信、右クリック、Omnibox `pl`、ダブルコピー、自動送信を実装
-
-## ライセンス
-
-必要に応じてライセンスを追加してください（例: MIT）。
