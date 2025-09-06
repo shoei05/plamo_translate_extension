@@ -30,6 +30,10 @@
     "storage",
     "contextMenus"
   ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
   "host_permissions": [
     "https://translate-demo.plamo.preferredai.jp/*"
   ],
@@ -41,19 +45,6 @@
       ],
       "js": [
         "content.js"
-      ],
-      "run_at": "document_start",
-      "all_frames": true
-    },
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "exclude_matches": [
-        "https://translate-demo.plamo.preferredai.jp/*"
-      ],
-      "js": [
-        "doublecopy.js"
       ],
       "run_at": "document_start",
       "all_frames": true

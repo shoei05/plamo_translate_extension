@@ -2,7 +2,7 @@
 const TARGET = 'https://translate-demo.plamo.preferredai.jp/';
 
 // ===== Settings =====
-const DEFAULT_SETTINGS = { autoSubmit: true };
+const DEFAULT_SETTINGS = { autoSubmit: true, enableDoubleCopy: false };
 function getSettings() {
   return new Promise((resolve) => {
     try { chrome.storage.sync.get(DEFAULT_SETTINGS, (items) => resolve(items || DEFAULT_SETTINGS)); }
@@ -11,6 +11,44 @@ function getSettings() {
 }
 
 function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ===== Optional: double-copy runtime registration (to avoid wide host perms by default) =====
+const DOUBLECOPY_ID = 'doublecopy-runtime';
+const ALL_URLS = ['http://*/*', 'https://*/*'];
+
+async function hasAllUrlsPermission() {
+  return new Promise((resolve) => {
+    try { chrome.permissions.contains({ origins: ALL_URLS }, (ok) => resolve(!!ok)); }
+    catch { resolve(false); }
+  });
+}
+
+async function registerDoubleCopyIfAllowed() {
+  try {
+    const allowed = await hasAllUrlsPermission();
+    if (!allowed) return false;
+    // idempotent: unregister existing first to refresh definition
+    try { await chrome.scripting.unregisterContentScripts({ ids: [DOUBLECOPY_ID] }); } catch {}
+    await chrome.scripting.registerContentScripts([{
+      id: DOUBLECOPY_ID,
+      js: ['doublecopy.js'],
+      matches: ALL_URLS,
+      excludeMatches: [TARGET + '*'],
+      runAt: 'document_start',
+      allFrames: true,
+      persistAcrossSessions: true,
+    }]);
+    return true;
+  } catch (e) {
+    console.warn('[PlamoExt] registerDoubleCopy failed', e);
+    return false;
+  }
+}
+
+async function unregisterDoubleCopy() {
+  try { await chrome.scripting.unregisterContentScripts({ ids: [DOUBLECOPY_ID] }); return true; }
+  catch { return false; }
+}
 
 // Omnibox suggestions while typing (safer on empty input)
 chrome.omnibox.onInputChanged.addListener((text, suggest) => {
@@ -280,7 +318,13 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 if (chrome.runtime.onStartup) {
-  chrome.runtime.onStartup.addListener(() => { warmExistingTabs(); });
+  chrome.runtime.onStartup.addListener(async () => {
+    warmExistingTabs();
+    try {
+      const { enableDoubleCopy } = await getSettings();
+      if (enableDoubleCopy) await registerDoubleCopyIfAllowed();
+    } catch (_) {}
+  });
 }
 
 // Best effort: nothing to do here for icons (static)
@@ -317,5 +361,26 @@ chrome.runtime.onMessage.addListener((msg, _sender, _resp) => {
     warmExistingTabs().finally(() =>
       handleTranslate(msg.text).catch((e) => console.warn('[PlamoExt][msg]', e))
     );
+  } else if (msg?.type === 'DOUBLECOPY_ENABLE') {
+    (async () => {
+      const ok = await registerDoubleCopyIfAllowed();
+      _resp?.({ ok });
+    })();
+    return true;
+  } else if (msg?.type === 'DOUBLECOPY_DISABLE') {
+    (async () => {
+      const ok = await unregisterDoubleCopy();
+      _resp?.({ ok });
+    })();
+    return true;
   }
 });
+
+// Keep registration in sync with permission changes
+try {
+  chrome.permissions?.onRemoved?.addListener(async (removed) => {
+    if (removed?.origins && removed.origins.some(o => o.startsWith('http'))) {
+      await unregisterDoubleCopy();
+    }
+  });
+} catch (_) {}

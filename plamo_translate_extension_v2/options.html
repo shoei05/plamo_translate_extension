@@ -23,6 +23,15 @@
       <div class="muted" style="margin-top:6px;">無効にすると入力のみ行います。</div>
     </div>
 
+    <div class="card">
+      <h3>ダブルコピー</h3>
+      <label><input type="checkbox" id="enableDoubleCopy" /> ダブルコピーで送信を有効にする（サイトアクセス許可が必要）</label>
+      <div class="muted" style="margin-top:6px;">
+        有効にすると、任意のサイトでコピーを2回連続（Ctrl/Cmd+C×2）すると選択テキストをPlamoへ送ります。
+        初回は「この拡張機能はこのサイトのデータの読み取りと変更ができます」の許可ダイアログが表示されます。
+      </div>
+    </div>
+
     <div class="row" style="margin-top: 16px;">
       <button id="save">保存</button>
       <div id="status" class="muted" aria-live="polite"></div>
@@ -31,4 +40,3 @@
     <script src="options.js"></script>
   </body>
   </html>
-

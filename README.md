@@ -28,6 +28,7 @@ Chrome Web Store 版の説明文は `docs/store-ja.md` を参照（後述）。
 - 右クリック: ページ上で文字列を選択 → 右クリック → 「Plamoで翻訳」
 - Omnibox: `pl` + Space/Tab → テキスト入力 → Enter
 - ダブルコピー: 文字列を選択 → Ctrl/Cmd + C を素早く 2 回（Plamo デモ内は無効）
+  - 初回有効化にはオプション画面で許可（optional host permissions）が必要です。
 
 ## オプション
 
@@ -47,6 +48,7 @@ Chrome Web Store 版の説明文は `docs/store-ja.md` を参照（後述）。
 - host_permissions: `https://translate-demo.plamo.preferredai.jp/*`
 - `<all_urls>` の content script は「copy」イベントのみを最小限に監視し、直前に選択したテキストだけを参照します。
 - 解析/個人情報の収集は行いません。テキスト送信はユーザー操作時のみ実施します。
+  - ダブルコピーは「オプションで有効にした場合」に限り、`http(s)://*/*` の optional host permissions を要求し、動的に content script を登録します。
 
 ## リポジトリ構成
 
